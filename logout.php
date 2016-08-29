@@ -14,4 +14,5 @@
 
    echo '<div class="well well-lg">You have cleaned session</div>
 ';
-   header('Refresh: 2; URL = index.php');
+   # header('Refresh: 2; URL = index.php');
+  header('Refresh: 0; URL = index.php');

@@ -16,7 +16,7 @@
     $title = "Log In";
     include 'inc/header.php';
     // Error message
-    $message = isset($_POST["message"]) ? $_POST["message"] : "";
+    $message = isset($_GET["message"]) ? $_GET["message"] : "";
 ?>
 
     <style type="text/css">

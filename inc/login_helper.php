@@ -19,12 +19,21 @@ if (isset($_POST['login'])) {
     if (empty($result)) {
         # code...
         echo "No user found";
+        header("Location: "."../login.php?message=No user found");
     } else {
         if ($result[0]['password'] == $inputPassword) {
             echo "One user found"; // $result[0]['password'];
             $_SESSION['valid'] = true;
             $_SESSION['name'] = $result[0]['name'];
+            $_SESSION['email'] = $result[0]['email'];
+            $_SESSION['contact'] = $result[0]['contact'];
+            $_SESSION['org_id'] = $result[0]['org_id'];
+            $_SESSION['name'] = $result[0]['name'];
+            $_SESSION['name'] = $result[0]['name'];
             header('Location: '.'../home.php');
+        } else {
+            echo "Wrong email or password";
+            header("Location: "."../login.php?message=Wrong email or password");
         }
     }
 
@@ -45,6 +54,7 @@ if (isset($_POST['login'])) {
 } else {
     // send to home page right away
     echo "No<br>";
+    //header("Location: "."../login.php?message=');
 }
 
 

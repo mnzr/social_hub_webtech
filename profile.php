@@ -13,7 +13,11 @@
 
 
     // In case session is valid, render the full page
-    $title = "Home";
+    $title = "Profile";
     include 'inc/header.php';
+
+    // Get user data
+
+
 
     echo "THis is Home";
