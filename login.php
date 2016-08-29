@@ -1,86 +1,85 @@
 <?php
-    ob_start();
-    session_start();
-    $title = "Login";
-    include 'inc/header.php';
-    include 'inc/connection.php';
-
-
-    $msg = '';
-
-    if (isset($_POST['login'])
-        && !empty($_POST['email'])
-        && !empty($_POST['password'])) {
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-
-        $sql = "SELECT id FROM users WHERE email = '$email' and password = '$password'";
-
-        try {
-            $result = $mysqlconn->query($sql);
-            $row = $result->fetch_assoc();
-            // $active = $row['active'];
-            //var_dump($row);
-
-              // If result matched $myusername and $mypassword, table row must be 1 row
-
-            if($row['id']) {
-                 // session_register("$username");
-                 //$_SESSION['login_user'] = $username;
-                $_SESSION['valid'] = true;
-                $_SESSION['timeout'] = time();
-                $_SESSION['email'] = $_POST['email'];
-                //echo "Logged in";
-                header('Location: '.'feed.php');
-                 //header("location: welcome.php");
-              }else {
-                  $msg = 'Wrong email or password';
-              }
-        } catch (Exception $e) {
-            echo "Something went wrong";
-        }
+    if(!isset($_SESSION)) {
+          session_start();
     }
 
-    if ($_SESSION['valid'] == true) {
-        header('Location: '.'feed.php');
-    } else {
+    // If session is valid, simply redirect to feed page
+    if (isset($_SESSION['valid'])) {
+      // Send to feed
+      header('Location: '.'home.php');
+      echo "Set";
+
+    }
+
+    // In case session is not valid, render the full page
+    // $_SESSION['valid'] = false;
+    $title = "Log In";
+    include 'inc/header.php';
+    // Error message
+    $message = isset($_POST["message"]) ? $_POST["message"] : "";
 ?>
-<div class = "container">
 
-         <form class = "form-signin" role = "form"
-            action = "<?php echo htmlspecialchars($_SERVER['PHP_SELF']);
-            ?>" method = "post">
-        <h2 class="form-signin-heading">Please sign in</h2>
+    <style type="text/css">
 
+        .form-signin {
+          max-width: 330px;
+          padding: 15px;
+          margin: 0 auto;
+        }
+        .form-signin .form-signin-heading,
+        .form-signin .checkbox {
+          margin-bottom: 10px;
+        }
+        .form-signin .checkbox {
+          font-weight: normal;
+        }
+        .form-signin .form-control {
+          position: relative;
+          height: auto;
+          -webkit-box-sizing: border-box;
+             -moz-box-sizing: border-box;
+                  box-sizing: border-box;
+          padding: 10px;
+          font-size: 16px;
+        }
+        .form-signin .form-control:focus {
+          z-index: 2;
+        }
+        .form-signin input[type="email"] {
+          margin-bottom: -1px;
+          border-bottom-right-radius: 0;
+          border-bottom-left-radius: 0;
+        }
+        .form-signin input[type="password"] {
+          margin-bottom: 10px;
+          border-top-left-radius: 0;
+          border-top-right-radius: 0;
+        }
 
-        <?php if (!($msg == "")) { ?>
-        <div class="alert alert-danger" role="alert">
-          <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-          <span class="sr-only">Error:</span>
-          Enter a valid email address
-            <p><?php echo "$msg";?></p>
-        </div>
-        <?php } ?>
+    </style>
 
-        <?php if (isset($_GET['signup'])){ ?>
-        <div class="alert alert-success" role="alert">
-          <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
-          <span class="sr-only">Success:</span>
-			You can log in now!
-        </div>
-        <?php } ?>
+    <div class="container">
+        <?php // In case a POST request ?>
+        <form class="form-signin" action ="inc/login_helper.php" method="post">
+            <h2 class="form-signin-heading">Please sign in</h2>
+            <?php if ($message != "") { ?>
+            <div class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                <?php echo "$message";?>
+            </div>
+            <?php } ?>
+            <label for="inputEmail" class="sr-only">Email address</label>
+            <input type="email" id="inputEmail" name="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input type="password" id="inputPassword" name="inputPassword" class="form-control" placeholder="Password" required>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" value="remember-me"> Remember me
+                </label>
+            </div>
+            <button name="login" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        </form>
 
-
-        <label for="inputEmail" class="sr-only">Email</label>
-        <input type="enail" id="inputEmail" name="email" class="form-control" placeholder="Email address" required autofocus>
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
-        <button class="btn btn-lg btn-primary btn-block" name="login" type="submit">Sign in</button>
-      </form>
-</div> <!-- /container -->
-
-<?php } ?>
-
-
-
+    </div> <!-- /container -->
 <?php include 'inc/footer.php'; ?>

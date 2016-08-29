@@ -1,6 +1,7 @@
 <?php
-    require $_SERVER['DOCUMENT_ROOT']. '/inc/' . 'config.php';
+    // require $_SERVER['DOCUMENT_ROOT']. '/inc/' . 'config.php';
     // Create connection
+    require 'config.php';
 
 $mysqlconn = new mysqli($mysqlserver, $mysqluser, $mysqlpass, $mysqldb);
 

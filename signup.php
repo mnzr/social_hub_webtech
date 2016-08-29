@@ -1,88 +1,136 @@
 <?php
-    session_start();
-    $title = "Sign Up";
-    include 'inc/header.php';
-    include 'inc/connection.php';
-
-
-    $msg = '';
-
-    if (isset($_POST['signup'])) {
-        $email      = $_POST['email'];
-        $first_name = $_POST['first_name'];
-        $last_name = $_POST['last_name'];
-        $password = $_POST['password'];
-
-        $sql = "INSERT INTO users (first_name, last_name, email, password, organization_id) VALUES ('$first_name', '$last_name', '$email', '$password', 1 )";
-
-        try {
-            if($mysqlconn->query($sql) === true) {
-                echo "<script type=\"text/javascript\">
-                alert('Your account has been created! Please log in with the email and password you used to sign up.');
-                </script>";
-                header('Location: '.'login.php?signup=true');
-            } else {
-              $msg = "Error: " . $sql . "<br>" . $mysqlconn->error;;
-            }
-        } catch (Exception $e) {
-            echo "Something went wrong";
-        }
-        $mysqlconn->close();
+    if(!isset($_SESSION)) {
+          session_start();
     }
 
-    if ($_SESSION['valid'] == true) {
-        header('Location: '.'feed.php');
-    } else {
+    // If session is valid, simply redirect to feed page
+    if (isset($_SESSION['valid'])) {
+      // Send to feed
+      header('Location: '.'home.php');
+      echo "Set";
+
+    }
+
+    // In case session is not valid, render the full page
+    // $_SESSION['valid'] = false;
+    $title = "Log In";
+    require_once("vendor/danielmewes/php-rql/rdb/rdb.php");
+    include 'inc/header.php';
+
+    // Get all organizations
+    $conn = r\connect('localhost');
+    $result = r\table("orgs")->run($conn)->toArray();
+
+
+
+
+    // Error message
+    $message = isset($_POST["message"]) ? $_POST["message"] : "";
 ?>
-<div class = "container">
-<script>
-function validate() {
-    var first_name = document.forms["register"]["first_name"].value;
-    var last_name = document.forms["register"]["last_name"].value;
-    var email = document.forms["register"]["email"].value;
-    var password = document.forms["register"]["password"].value;
-    var confirm_password = document.forms["register"]["confirm_password"].value;
 
-}
-</script>
-<form class = "form-signin" role = "form" name = "register"
-        action = "<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>"
-        method = "post" onSubmit = "return validate();">
+    <style type="text/css">
 
-        <h2 class="form-signin-heading">Enter your details</h2>
+        .form-signup {
+          max-width: 330px;
+          padding: 15px;
+          margin: 0 auto;
+        }
+        .form-signup .form-signup-heading,
+        .form-signup .checkbox {
+          margin-bottom: 10px;
+        }
+        .form-signup .checkbox {
+          font-weight: normal;
+        }
+        .form-signup .form-control {
+          position: relative;
+          height: auto;
+          -webkit-box-sizing: border-box;
+             -moz-box-sizing: border-box;
+                  box-sizing: border-box;
+          padding: 10px;
+          font-size: 16px;
+        }
+        .form-signup .form-control:focus {
+          z-index: 2;
+        }
+
+        .form-signup input[type="email"],
+        .form-signup input[type="password"],
+        .form-signup input[type="text"] {
+          margin-bottom: 10px;
+        }
+
+        /*
+        .form-signup input[type="email"] {
+          margin-bottom: -1px;
+          border-bottom-right-radius: 0;
+          border-bottom-left-radius: 0;
+        }
+        .form-signup input[type="password"] {
+          margin-bottom: 10px;
+          border-top-left-radius: 0;
+          border-top-right-radius: 0;
+        }
+
+        .form-signup input[name="inputContact"] {
+          margin-bottom: -1px;
+          border-bottom-right-radius: 0;
+          border-bottom-left-radius: 0;
+        }
+        .form-signup input[name="inputLocation"] {
+          margin-bottom: 10px;
+          border-top-left-radius: 0;
+          border-top-right-radius: 0;
+        }
+        */
+    </style>
+
+    <div class="container">
+        <?php // In case a POST request ?>
+        <form class="form-signup" action ="hlp/signup_helper.php" method="post">
+            <h2 class="form-signup-heading">Enter information</h2>
+            <?php if ($message != "") { ?>
+            <div class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                <?php echo "$message";?>
+            </div>
+            <?php } ?>
+            <label for="inputName" class="sr-only">Full name</label>
+            <input type="email" id="inputName" name="inputName" class="form-control" placeholder="Full name" required autofocus>
+
+            <label for="inputEmail" class="sr-only">Email address</label>
+            <input type="email" id="inputEmail" name="inputEmail" class="form-control" placeholder="Email address" required>
+
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input type="password" id="inputPassword" name="inputPassword" class="form-control" placeholder="Password" required>
+
+            <label for="inputConfirmPassword" class="sr-only">Password</label>
+            <input type="password" id="inputConfirmPassword" name="inputConfirmPassword" class="form-control" placeholder="Confirm password" required>
 
 
-        <?php if (!($msg == "")) { ?>
-        <div class="alert alert-danger" role="alert">
-          <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-          <span class="sr-only">Error:</span>
-            <p><?php echo "$msg";?></p>
-        </div>
-        <?php } ?>
+            <label for="inputContact" class="sr-only">Contact number</label>
+            <input type="text"     id="inputContact" name="inputContact" class="form-control" placeholder="Contact number" required>
 
+            <label for="inputLocation" class="sr-only">Address</label>
+            <input type="text"     id="inputLocation" name="inputLocation" class="form-control" placeholder="Address" required>
 
+            <div class="form-group">
+            <label for="inputOrg" class="sr-only">Select organization</label>
+            <select class="form-control" id="inputOrg" name="inputOrg">
+                <option value="" placeholder="Select organization">Select organization</option>
+                <?php
+                foreach ($result as $key => $value) {
+                    echo "<option value='". $value['id'] . "'>"
+                        . $value['name']
+                        ."</option>";
+                } ?>
+            </select>
+            </div>
 
+            <button name="sighup" class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+        </form>
 
-        <label for="first_name" class="sr-only">First Name</label>
-        <input type="text" id="first_name" name="first_name" class="form-control" placeholder="First name" required autofocus>
-
-        <label for="last_name" class="sr-only">Last Name</label>
-        <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Last name" required autofocus>
-
-
-        <label for="email" class="sr-only">Email</label>
-        <input type="text" id="email" name="email" class="form-control" placeholder="Email address" required autofocus>
-
-        <label for="password" class="sr-only">Password</label>
-        <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
-
-        <label for="confirm_password" class="sr-only">Confirm Password</label>
-        <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="Confirm Password" required>
-
-        <button class="btn btn-lg btn-primary btn-block" name="signup" type="submit">Sign up</button>
-    </form>
-</div> <!-- /container -->
-<?php } ?>
-
-
+    </div> <!-- /container -->
 <?php include 'inc/footer.php'; ?>

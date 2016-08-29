@@ -1,0 +1,6 @@
+{
+    "require": {
+        "danielmewes/php-rql": "dev-master",
+        "twbs/bootstrap": "^3.3"
+    }
+}
