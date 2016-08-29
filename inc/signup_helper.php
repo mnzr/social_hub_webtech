@@ -22,9 +22,12 @@ if (isset($_POST['signup'])) {
         'name' => $inputName,
         'email' => $inputEmail,
         'password' => $inputPassword,
+        'contact' => $inputContact,
+        'org_id' => $inputOrg
         ];
-    $result = r\table("users")->filter($document)->run($conn)->toArray();
+    $result = r\table("users")->insert($document)->run($conn);
     print("<pre>".print_r($result,true)."</pre>");
+    /*
     if (empty($result)) {
         # code...
         echo "No user found";
@@ -36,7 +39,7 @@ if (isset($_POST['signup'])) {
             header('Location: '.'../home.php');
         }
     }
-
+*/
 
     /*
     if ($result) {

@@ -88,7 +88,7 @@
 
     <div class="container">
         <?php // In case a POST request ?>
-        <form class="form-signup" action ="hlp/signup_helper.php" method="post">
+        <form class="form-signup" action ="inc/signup_helper.php" method="post">
             <h2 class="form-signup-heading">Enter information</h2>
             <?php if ($message != "") { ?>
             <div class="alert alert-danger" role="alert">
@@ -98,7 +98,7 @@
             </div>
             <?php } ?>
             <label for="inputName" class="sr-only">Full name</label>
-            <input type="email" id="inputName" name="inputName" class="form-control" placeholder="Full name" required autofocus>
+            <input type="text" id="inputName" name="inputName" class="form-control" placeholder="Full name" required autofocus>
 
             <label for="inputEmail" class="sr-only">Email address</label>
             <input type="email" id="inputEmail" name="inputEmail" class="form-control" placeholder="Email address" required>
@@ -113,8 +113,8 @@
             <label for="inputContact" class="sr-only">Contact number</label>
             <input type="text"     id="inputContact" name="inputContact" class="form-control" placeholder="Contact number" required>
 
-            <label for="inputLocation" class="sr-only">Address</label>
-            <input type="text"     id="inputLocation" name="inputLocation" class="form-control" placeholder="Address" required>
+            <label for="inputAddress" class="sr-only">Address</label>
+            <input type="text"     id="inputAddress" name="inputAddress" class="form-control" placeholder="Address" required>
 
             <div class="form-group">
             <label for="inputOrg" class="sr-only">Select organization</label>
@@ -129,7 +129,7 @@
             </select>
             </div>
 
-            <button name="sighup" class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+            <button name="signup" class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
         </form>
 
     </div> <!-- /container -->
