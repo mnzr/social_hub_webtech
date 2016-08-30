@@ -21,11 +21,8 @@
     $conn = r\connect('localhost');
     $result = r\table("orgs")->run($conn)->toArray();
 
-
-
-
-    // Error message
-    $message = isset($_POST["message"]) ? $_POST["message"] : "";
+    // Success message
+    $message = isset($_GET["message"]) ? $_GET["message"] : "";
 ?>
 
     <style type="text/css">
@@ -91,9 +88,9 @@
         <form class="form-signup" action ="inc/signup_helper.php" method="post">
             <h2 class="form-signup-heading">Enter information</h2>
             <?php if ($message != "") { ?>
-            <div class="alert alert-danger" role="alert">
-                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                <span class="sr-only">Error:</span>
+            <div class="alert alert-info" role="alert">
+                <span class="glyphicon glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                <span class="sr-only">Success:</span>
                 <?php echo "$message";?>
             </div>
             <?php } ?>

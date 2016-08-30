@@ -24,12 +24,12 @@ if (isset($_POST['login'])) {
         if ($result[0]['password'] == $inputPassword) {
             echo "One user found"; // $result[0]['password'];
             $_SESSION['valid'] = true;
+            $_SESSION['id'] = $result[0]['id'];
             $_SESSION['name'] = $result[0]['name'];
             $_SESSION['email'] = $result[0]['email'];
             $_SESSION['contact'] = $result[0]['contact'];
             $_SESSION['org_id'] = $result[0]['org_id'];
-            $_SESSION['name'] = $result[0]['name'];
-            $_SESSION['name'] = $result[0]['name'];
+            $_SESSION['address'] = $result[0]['name'];
             header('Location: '.'../home.php');
         } else {
             echo "Wrong email or password";
